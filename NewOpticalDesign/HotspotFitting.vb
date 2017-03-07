@@ -466,7 +466,7 @@ Public Class HotspotFitting
 
         Next
 
-        MessageBox.Show(dt.Rows(1)(1))
+        'MessageBox.Show(dt.Rows(1)(1))
 
 
 
