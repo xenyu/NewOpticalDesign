@@ -125,6 +125,7 @@ Public Class HotspotFitting
         Next
     End Sub
 
+    'Upper Fitting
     Private Sub FittingButton1_Click(sender As Object, e As EventArgs) Handles FittingButton1.Click
         Dim BLUwidth As Double, LEDnum As Integer, LEDpitch As Double
 
@@ -154,6 +155,7 @@ Public Class HotspotFitting
                 Exit Sub
             End If
 
+            '計算取hotspot的位置
             Dim Grid As Double, pitchGrid As Integer, edgeGrid As Integer
             Grid = (BLUwidth / count)
             pitchGrid = CInt(LEDpitch / Grid)
@@ -172,6 +174,7 @@ Public Class HotspotFitting
         End Try
     End Sub
 
+    'middle fitting
     Private Sub FittingButton2_Click(sender As Object, e As EventArgs) Handles FittingButton2.Click
         Try
             fitmiddle(sender, e)
@@ -182,6 +185,7 @@ Public Class HotspotFitting
         End Try
     End Sub
 
+    'lower fitting
     Private Sub FittingButton3_Click(sender As Object, e As EventArgs) Handles FittingButton3.Click
         Dim BLUwidth As Double, LEDnum As Integer, LEDpitch As Double
 
@@ -211,6 +215,7 @@ Public Class HotspotFitting
                 Exit Sub
             End If
 
+            '計算取hotspot的位置
             Dim Grid As Double, pitchGrid As Integer, edgeGrid As Integer
             Grid = (BLUwidth / count)
             pitchGrid = CInt(LEDpitch / Grid)
