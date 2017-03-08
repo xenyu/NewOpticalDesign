@@ -8,17 +8,17 @@ Public Class HotspotFitting
     Public dt As DataTable = New DataTable()
     Public dt1 As DataTable = New DataTable()
 
-    Private newclass As New NewClass
-
     Private Sub todo_work1(ByVal worker As BackgroundWorker, ByVal e As DoWorkEventArgs)
         Try
             dt.Clear()
+            '如果data table裡有資料，將data table裡的欄位去除
             If dt.Columns.Count > 0 Then
-                For b = 0 To dt.Columns.Count - 1 '[迴圈]將data table裡的欄位去除
+                For b = 0 To dt.Columns.Count - 1
                     dt.Columns.RemoveAt(0)
                 Next
             End If
 
+            '將載入的檔案分行放進query裡
             Dim query = From line In File.ReadAllLines(UploadOpenFileDialog.FileName) _
                                              Let record = line.Split(CChar("vbCrLf")) _
                                              Select line
@@ -38,7 +38,7 @@ Public Class HotspotFitting
                     Newrow(i) = CDbl(nArray(i))
                 Next
 
-                dt.Rows.Add(Newrow)
+                dt.Rows.Add(Newrow) '新增一行資料
                 dtcount = dtcount + 1
             Next
 
@@ -55,11 +55,11 @@ Public Class HotspotFitting
 
     Private Sub ImportButton_Click(sender As Object, e As EventArgs) Handles ImportButton.Click
         UploadOpenFileDialog.InitialDirectory = "" & getInitialDirectory() & ""
-        UploadOpenFileDialog.Filter = "CSV Files (*.csv)|*.csv" '設計只能上傳csv檔
+        UploadOpenFileDialog.Filter = "CSV Files (*.csv)|*.csv" '只能上傳csv檔
         UploadOpenFileDialog.RestoreDirectory = True
         UploadOpenFileDialog.FilterIndex = 2
 
-        If UploadOpenFileDialog.ShowDialog() = Windows.Forms.DialogResult.OK Then '讀取csv檔，轉進UploadTextbox
+        If UploadOpenFileDialog.ShowDialog() = Windows.Forms.DialogResult.OK Then
             ImportdataTextBox.Text = UploadOpenFileDialog.FileName
 
             BackgroundWorker1.RunWorkerAsync()
@@ -72,19 +72,20 @@ Public Class HotspotFitting
         End If
     End Sub
 
-    Private Sub Resample()
-        Dim newdt As DataTable = dt.Clone()
-        Dim rows As DataRow() = dt.Select("1=1")
+    Private Sub Resample() '重新選取總顯示行數
+        Dim newdt As DataTable = dt.Clone() '複製新dt
+        Dim rows As DataRow() = dt.Select("1=1") '選取所有資料
 
         For j = 0 To CInt(rowTextBox.Text) - 1
-            newdt.ImportRow(DirectCast(rows(j), DataRow))
+            newdt.ImportRow(DirectCast(rows(j), DataRow)) '將資料載入新dt
         Next
 
-        DataGridView1.DataSource = newdt
+        DataGridView1.DataSource = newdt '
         DataGridView1.CurrentRow.Selected = False
     End Sub
 
     Private Sub DataGridView1_MouseUp(sender As Object, e As MouseEventArgs) Handles DataGridView1.MouseUp
+        '點選資料行時，顯示該行的曲線圖
         Chart1.Series.Clear()
         Dim count As Integer = 1
 
