@@ -92,7 +92,7 @@ Public Class HotspotFitting
         For Each row As DataGridViewRow In DataGridView1.SelectedRows
             Dim series1 As Series = New Series("Series" & count & "", 1000)
 
-            Select Case row.Index
+            Select Case row.Index '設定選擇那行，會有不同顏色
                 Case 0
                     series1.Color = Color.Red
                 Case 1
@@ -116,11 +116,11 @@ Public Class HotspotFitting
             series1.ChartType = SeriesChartType.Spline
             series1.BorderWidth = 2
 
-            For i = 1 To DataGridView1.Columns.Count
+            For i = 1 To DataGridView1.Columns.Count '列出曲線上每一點
                 series1.Points.AddXY(i, DataGridView1.Rows(row.Index).Cells(i - 1).Value)
             Next
 
-            Chart1.Series.Add(series1)
+            Chart1.Series.Add(series1) '畫線
             count = count + 1
         Next
     End Sub
