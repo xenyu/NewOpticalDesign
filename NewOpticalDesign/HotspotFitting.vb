@@ -161,14 +161,14 @@ Public Class HotspotFitting
             pitchGrid = CInt(LEDpitch / Grid)
             edgeGrid = CInt((BLUwidth - ((LEDnum - 1) * LEDpitch)) / Grid / 2)
 
-            If CheckBox1.Checked = True Then
+            If CheckBox1.Checked = True Then '選擇亮LED在前，跳到fitline1
                 fitline1(sender, e, LEDnum, pitchGrid, edgeGrid, "upper")
-            Else
+            Else '選擇亮在LED間，跳到fitline2
                 fitline2(sender, e, LEDnum, pitchGrid, edgeGrid, "upper")
             End If
 
             Dim button As Button = FittingButton1
-            changecolor(button, 1)
+            changecolor(button, 1) '點選後變更按鈕的顏色
         Catch ex As Exception
             MessageBox.Show(ex.Message, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1)
         End Try
@@ -179,7 +179,7 @@ Public Class HotspotFitting
         Try
             fitmiddle(sender, e)
             Dim button As Button = FittingButton2
-            changecolor(button, 2)
+            changecolor(button, 2) '點選後變更按鈕的顏色
         Catch ex As Exception
             MessageBox.Show(ex.Message, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1)
         End Try
@@ -221,21 +221,21 @@ Public Class HotspotFitting
             pitchGrid = CInt(LEDpitch / Grid)
             edgeGrid = CInt((BLUwidth - ((LEDnum - 1) * LEDpitch)) / Grid / 2)
 
-            If CheckBox1.Checked = True Then
+            If CheckBox1.Checked = True Then '選擇亮LED在前，跳到fitline1
                 fitline1(sender, e, LEDnum, pitchGrid, edgeGrid, "lower")
-            Else
+            Else '選擇亮在LED間，跳到fitline2
                 fitline2(sender, e, LEDnum, pitchGrid, edgeGrid, "lower")
             End If
 
             Dim button As Button = FittingButton3
-            changecolor(button, 3)
+            changecolor(button, 3) '點選後變更按鈕的顏色
         Catch ex As Exception
             MessageBox.Show(ex.Message, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1)
         End Try
     End Sub
 
     Private Sub TrackBar1_Scroll(sender As Object, e As EventArgs) Handles TrackBar1.Scroll
-        TrackbarValueTextBox.Text = TrackBar1.Value
+        TrackbarValueTextBox.Text = TrackBar1.Value '使用者選擇曲線平滑度
     End Sub
 
     Private Sub fitline1(sender As Object, e As EventArgs, ByVal count As Integer, ByVal pitchGrid As Integer, ByVal edgeGrid As Integer, ByVal category As String)
