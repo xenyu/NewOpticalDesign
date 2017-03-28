@@ -39,7 +39,6 @@ Partial Class HotspotFitting
         Me.FittingButton1 = New System.Windows.Forms.Button()
         Me.FittingButton2 = New System.Windows.Forms.Button()
         Me.FittingButton3 = New System.Windows.Forms.Button()
-        Me.BackgroundWorker1 = New System.ComponentModel.BackgroundWorker()
         Me.TrackBar1 = New System.Windows.Forms.TrackBar()
         Me.SmoothLabel = New System.Windows.Forms.Label()
         Me.TrackbarValueTextBox = New System.Windows.Forms.TextBox()
@@ -59,6 +58,7 @@ Partial Class HotspotFitting
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
         Me.GroupBox3 = New System.Windows.Forms.GroupBox()
+        Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog()
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.Chart1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.TrackBar1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -152,6 +152,7 @@ Partial Class HotspotFitting
         DataGridViewCellStyle2.Font = New System.Drawing.Font("Cambria", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.DataGridView1.RowsDefaultCellStyle = DataGridViewCellStyle2
         Me.DataGridView1.RowTemplate.Height = 24
+        Me.DataGridView1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
         Me.DataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.DataGridView1.Size = New System.Drawing.Size(923, 237)
         Me.DataGridView1.TabIndex = 14
@@ -217,9 +218,6 @@ Partial Class HotspotFitting
         Me.FittingButton3.TabIndex = 21
         Me.FittingButton3.Text = "Lower Fitting"
         Me.FittingButton3.UseVisualStyleBackColor = True
-        '
-        'BackgroundWorker1
-        '
         '
         'TrackBar1
         '
@@ -369,7 +367,7 @@ Partial Class HotspotFitting
         '
         Me.OutputButton.Enabled = False
         Me.OutputButton.Font = New System.Drawing.Font("Cambria", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.OutputButton.Location = New System.Drawing.Point(859, 815)
+        Me.OutputButton.Location = New System.Drawing.Point(859, 814)
         Me.OutputButton.Name = "OutputButton"
         Me.OutputButton.Size = New System.Drawing.Size(75, 27)
         Me.OutputButton.TabIndex = 38
@@ -478,7 +476,6 @@ Partial Class HotspotFitting
     Friend WithEvents FittingButton1 As System.Windows.Forms.Button
     Friend WithEvents FittingButton2 As System.Windows.Forms.Button
     Friend WithEvents FittingButton3 As System.Windows.Forms.Button
-    Friend WithEvents BackgroundWorker1 As System.ComponentModel.BackgroundWorker
     Friend WithEvents TrackBar1 As System.Windows.Forms.TrackBar
     Friend WithEvents SmoothLabel As System.Windows.Forms.Label
     Friend WithEvents TrackbarValueTextBox As System.Windows.Forms.TextBox
@@ -498,4 +495,5 @@ Partial Class HotspotFitting
     Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
     Friend WithEvents GroupBox2 As System.Windows.Forms.GroupBox
     Friend WithEvents GroupBox3 As System.Windows.Forms.GroupBox
+    Friend WithEvents SaveFileDialog1 As System.Windows.Forms.SaveFileDialog
 End Class

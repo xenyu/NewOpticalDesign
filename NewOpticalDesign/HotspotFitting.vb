@@ -1,6 +1,8 @@
 ﻿Imports System.IO
 Imports System.Windows.Forms.DataVisualization.Charting
 Imports System.ComponentModel
+Imports System.Text
+Imports System.Threading
 
 Public Class HotspotFitting
 
@@ -8,7 +10,25 @@ Public Class HotspotFitting
     Public dt As DataTable = New DataTable()
     Public dt1 As DataTable = New DataTable()
 
-    Private Sub todo_work1(ByVal worker As BackgroundWorker, ByVal e As DoWorkEventArgs)
+    Private Sub HotspotFitting_Load(sender As Object, e As EventArgs) Handles Me.Load
+        ThreadPool.SetMinThreads(2, 5)
+        ThreadPool.SetMaxThreads(4, 10)
+    End Sub
+
+    Private Sub ImportButton_Click(sender As Object, e As EventArgs) Handles ImportButton.Click
+        UploadOpenFileDialog.InitialDirectory = "" & getInitialDirectory() & ""
+        UploadOpenFileDialog.Filter = "CSV Files (*.csv)|*.csv" '只能上傳csv檔
+        UploadOpenFileDialog.RestoreDirectory = True
+        UploadOpenFileDialog.FilterIndex = 2
+
+        If UploadOpenFileDialog.ShowDialog() = Windows.Forms.DialogResult.OK Then
+            ImportdataTextBox.Text = UploadOpenFileDialog.FileName
+
+            ThreadPool.QueueUserWorkItem(New WaitCallback(AddressOf goinput))
+        End If
+    End Sub
+
+    Private Sub goinput()
         Try
             dt.Clear()
             '如果data table裡有資料，將data table裡的欄位去除
@@ -33,6 +53,7 @@ Public Class HotspotFitting
                 For i = 0 To count - 1
                     If dtcount = 0 Then
                         dt.Columns.Add("" & i + 1 & "", GetType(Double)) '新增data table欄位
+                        dt1.Columns.Add("" & i + 1 & "", GetType(Double))
                     End If
 
                     Newrow(i) = CDbl(nArray(i))
@@ -40,30 +61,21 @@ Public Class HotspotFitting
 
                 dt.Rows.Add(Newrow) '新增一行資料
                 dtcount = dtcount + 1
+
+                Dim mi As MyInvoke = New MyInvoke(AddressOf DisplayDataGridView)
+                Invoke(mi)
             Next
 
             Resample()
+    
         Catch ex As Exception
             MessageBox.Show(ex.Message, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1)
         End Try
     End Sub
 
-    Private Sub BackgroundWorker1_DoWork(ByVal sender As System.Object, ByVal e As System.ComponentModel.DoWorkEventArgs) Handles BackgroundWorker1.DoWork
-        Dim worker As BackgroundWorker = CType(sender, BackgroundWorker)
-        todo_work1(worker, e)
-    End Sub
+    Private Delegate Sub MyInvoke()
+    Private Sub DisplayDataGridView()
 
-    Private Sub ImportButton_Click(sender As Object, e As EventArgs) Handles ImportButton.Click
-        UploadOpenFileDialog.InitialDirectory = "" & getInitialDirectory() & ""
-        UploadOpenFileDialog.Filter = "CSV Files (*.csv)|*.csv" '只能上傳csv檔
-        UploadOpenFileDialog.RestoreDirectory = True
-        UploadOpenFileDialog.FilterIndex = 2
-
-        If UploadOpenFileDialog.ShowDialog() = Windows.Forms.DialogResult.OK Then
-            ImportdataTextBox.Text = UploadOpenFileDialog.FileName
-
-            BackgroundWorker1.RunWorkerAsync()
-        End If
     End Sub
 
     Private Sub ReSampleButton_Click(sender As Object, e As EventArgs) Handles ReSampleButton.Click
@@ -80,12 +92,16 @@ Public Class HotspotFitting
             newdt.ImportRow(DirectCast(rows(j), DataRow)) '將資料載入新dt
         Next
 
-        DataGridView1.DataSource = newdt '
+        DataGridView1.DataSource = newdt
         DataGridView1.CurrentRow.Selected = False
+
+        For Each col In DataGridView1.Columns
+            col.sortmode = DataGridViewColumnSortMode.NotSortable
+        Next
     End Sub
 
+    '點選資料行時，顯示該行的曲線圖
     Private Sub DataGridView1_MouseUp(sender As Object, e As MouseEventArgs) Handles DataGridView1.MouseUp
-        '點選資料行時，顯示該行的曲線圖
         Chart1.Series.Clear()
         Dim count As Integer = 1
 
@@ -423,22 +439,32 @@ Public Class HotspotFitting
             rho = TrackBar1.Value
 
             Dim row As Integer = DataGridView1.SelectedRows(0).Index
+            Dim Newrow As DataRow = dt1.NewRow
 
             x(0) = CDbl(0)
             y(0) = CDbl(DataGridView1.Rows(row).Cells(0).Value)
 
-            For i = 1 To DataGridView1.Columns.Count
-                x(i) = CDbl(i)
-                y(i) = CDbl(DataGridView1.Rows(row).Cells(i - 1).Value)
+            For j = 0 To DataGridView1.Rows.Count - 1
+                For i = 1 To DataGridView1.Columns.Count
+
+                    x(i) = CDbl(i)
+                    y(i) = CDbl(DataGridView1.Rows(row).Cells(i - 1).Value)
+
+                    XAlglib.spline1dfitpenalized(x, y, 50, rho, info, s, rep)
+                Next
+
+                If j = row Then
+                    For m = 1 To DataGridView1.Columns.Count
+                        series2.Points.AddXY(m, XAlglib.spline1dcalc(s, m))
+                        Newrow(m) = CDbl(XAlglib.spline1dcalc(s, m))
+                    Next
+
+                    Chart1.Series.Add(series2)
+                End If
+                ' dt1.Rows.Add(Newrow) '新增一行資料
             Next
 
-            XAlglib.spline1dfitpenalized(x, y, 50, rho, info, s, rep)
 
-            For j = 1 To DataGridView1.Columns.Count
-                series2.Points.AddXY(j, XAlglib.spline1dcalc(s, j))
-            Next
-
-            Chart1.Series.Add(series2)
         Catch ex As Exception
             MessageBox.Show(ex.Message, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1)
         End Try
@@ -467,14 +493,20 @@ Public Class HotspotFitting
     End Sub
 
     Private Sub OutputButton_Click(sender As Object, e As EventArgs) Handles OutputButton.Click
-        For i = 0 To dt.Columns.Count - 1
+        Dim SaveFileDialog As SaveFileDialog = New SaveFileDialog
+        SaveFileDialog.InitialDirectory = "c:\" '設定開啟檔案格式
+        SaveFileDialog.Filter = "TXT Files (*.txt)|*.txt"
+        SaveFileDialog.RestoreDirectory = True
+        SaveFileDialog.FilterIndex = 2
 
+        Dim sw As StreamWriter = New StreamWriter(SaveFileDialog.FileName, False, System.Text.Encoding.Default)
 
+        For j = 0 To dt1.Rows.Count - 1
+            For i = 0 To dt1.Columns.Count - 1
+                sw.WriteLine(dt1.Rows(i)(j) & ",")
+            Next
+            sw.WriteLine(vbCrLf)
         Next
-
-        'MessageBox.Show(dt.Rows(1)(1))
-
-
 
     End Sub
 
@@ -502,4 +534,5 @@ Public Class HotspotFitting
         controlLabel.Text = num
         OutputButton.Enabled = True
     End Sub
+
 End Class
