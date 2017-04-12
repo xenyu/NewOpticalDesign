@@ -9,7 +9,7 @@ Public Class HotspotFitting
     Public UploadOpenFileDialog As OpenFileDialog = New OpenFileDialog
     Public dt As DataTable = New DataTable()
     Public dt1 As DataTable = New DataTable()
-
+    
     Private Sub HotspotFitting_Load(sender As Object, e As EventArgs) Handles Me.Load
         ThreadPool.SetMinThreads(2, 5)
         ThreadPool.SetMaxThreads(4, 10)
@@ -74,7 +74,7 @@ Public Class HotspotFitting
     End Sub
 
     Private Delegate Sub MyInvoke()
-    Private Sub DisplayDataGridView()
+    Private Sub DisplayDataGridView() '
 
     End Sub
 
@@ -143,57 +143,72 @@ Public Class HotspotFitting
 
     'Upper Fitting
     Private Sub FittingButton1_Click(sender As Object, e As EventArgs) Handles FittingButton1.Click
-        Dim BLUwidth As Double, LEDnum As Integer, LEDpitch As Double
+        'Dim BLUwidth As Double, LEDnum As Integer, LEDpitch As Double
 
-        Try
-            If BluwidthTextBox.Text = "" Then
-                MessageBox.Show("請填入BLUwidth", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1)
-                Exit Sub
-            End If
+        'Try
+        '    If BluwidthTextBox.Text = "" Then
+        '        MessageBox.Show("請填入BLUwidth", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1)
+        '        Exit Sub
+        '    End If
 
-            If LEDnumberTextBox.Text = "" Then
-                MessageBox.Show("請填入LEDnumber", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1)
-                Exit Sub
-            End If
+        '    If LEDnumberTextBox.Text = "" Then
+        '        MessageBox.Show("請填入LEDnumber", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1)
+        '        Exit Sub
+        '    End If
 
-            If LEDpitchTextBox.Text = "" Then
-                MessageBox.Show("請填入LEDpitch", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1)
-                Exit Sub
-            End If
+        '    If LEDpitchTextBox.Text = "" Then
+        '        MessageBox.Show("請填入LEDpitch", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1)
+        '        Exit Sub
+        '    End If
 
-            BLUwidth = CDbl(BluwidthTextBox.Text)
-            LEDnum = CInt(LEDnumberTextBox.Text)
-            LEDpitch = CDbl(LEDpitchTextBox.Text)
+        '    BLUwidth = CDbl(BluwidthTextBox.Text)
+        '    LEDnum = CInt(LEDnumberTextBox.Text)
+        '    LEDpitch = CDbl(LEDpitchTextBox.Text)
 
-            Dim count As Integer = DataGridView1.Columns.Count
-            If count = 0 Then
-                MessageBox.Show("請先輸入光學數據", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1)
-                Exit Sub
-            End If
+        '    Dim count As Integer = DataGridView1.Columns.Count
+        '    If count = 0 Then
+        '        MessageBox.Show("請先輸入光學數據", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1)
+        '        Exit Sub
+        '    End If
 
-            '計算取hotspot的位置
-            Dim Grid As Double, pitchGrid As Integer, edgeGrid As Integer
-            Grid = (BLUwidth / count)
-            pitchGrid = CInt(LEDpitch / Grid)
-            edgeGrid = CInt((BLUwidth - ((LEDnum - 1) * LEDpitch)) / Grid / 2)
+        '    '計算取hotspot的位置
+        '    Dim Grid As Double, pitchGrid As Integer, edgeGrid As Integer
+        '    Grid = (BLUwidth / count)
+        '    pitchGrid = CInt(LEDpitch / Grid)
+        '    edgeGrid = CInt((BLUwidth - ((LEDnum - 1) * LEDpitch)) / Grid / 2)
 
-            If CheckBox1.Checked = True Then '選擇亮LED在前，跳到fitline1
-                fitline1(sender, e, LEDnum, pitchGrid, edgeGrid, "upper")
-            Else '選擇亮在LED間，跳到fitline2
-                fitline2(sender, e, LEDnum, pitchGrid, edgeGrid, "upper")
-            End If
+        '    If CheckBox1.Checked = True Then '選擇亮LED在前，跳到fitline1
+        '        fitline1(sender, e, LEDnum, pitchGrid, edgeGrid, "upper")
+        '    Else '選擇亮在LED間，跳到fitline2
+        '        fitline2(sender, e, LEDnum, pitchGrid, edgeGrid, "upper")
+        '    End If
 
-            Dim button As Button = FittingButton1
-            changecolor(button, 1) '點選後變更按鈕的顏色
-        Catch ex As Exception
-            MessageBox.Show(ex.Message, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1)
-        End Try
+        '    Dim button As Button = FittingButton1
+        '    changecolor(button, 1) '點選後變更按鈕的顏色
+        'Catch ex As Exception
+        '    MessageBox.Show(ex.Message, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1)
+        'End Try
     End Sub
 
     'middle fitting
     Private Sub FittingButton2_Click(sender As Object, e As EventArgs) Handles FittingButton2.Click
         Try
-            fitmiddle(sender, e)
+            Chart1.Series.Clear()
+            DataGridView1_MouseUp(sender, e)
+            Dim series2 As Series = New Series("Fitting", 1000)
+            series2.ChartType = SeriesChartType.Spline
+            series2.BorderWidth = 2
+            series2.Color = Color.LightSeaGreen
+
+            fitmiddle(DataGridView1.SelectedRows(0).Index)
+
+            For j = 0 To DataGridView1.Columns.Count - 1
+                series2.Points.AddXY(j, dt1(0)(j))
+            Next
+
+            Chart1.Series.Add(series2)
+            dt1.Clear()
+
             Dim button As Button = FittingButton2
             changecolor(button, 2) '點選後變更按鈕的顏色
         Catch ex As Exception
@@ -203,51 +218,51 @@ Public Class HotspotFitting
 
     'lower fitting
     Private Sub FittingButton3_Click(sender As Object, e As EventArgs) Handles FittingButton3.Click
-        Dim BLUwidth As Double, LEDnum As Integer, LEDpitch As Double
+        'Dim BLUwidth As Double, LEDnum As Integer, LEDpitch As Double
 
-        Try
-            If BluwidthTextBox.Text = "" Then
-                MessageBox.Show("請填入BLUwidth", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1)
-                Exit Sub
-            End If
+        'Try
+        '    If BluwidthTextBox.Text = "" Then
+        '        MessageBox.Show("請填入BLUwidth", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1)
+        '        Exit Sub
+        '    End If
 
-            If LEDnumberTextBox.Text = "" Then
-                MessageBox.Show("請填入LEDnumber", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1)
-                Exit Sub
-            End If
+        '    If LEDnumberTextBox.Text = "" Then
+        '        MessageBox.Show("請填入LEDnumber", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1)
+        '        Exit Sub
+        '    End If
 
-            If LEDpitchTextBox.Text = "" Then
-                MessageBox.Show("請填入LEDpitch", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1)
-                Exit Sub
-            End If
+        '    If LEDpitchTextBox.Text = "" Then
+        '        MessageBox.Show("請填入LEDpitch", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1)
+        '        Exit Sub
+        '    End If
 
-            BLUwidth = CDbl(BluwidthTextBox.Text)
-            LEDnum = CInt(LEDnumberTextBox.Text)
-            LEDpitch = CDbl(LEDpitchTextBox.Text)
+        '    BLUwidth = CDbl(BluwidthTextBox.Text)
+        '    LEDnum = CInt(LEDnumberTextBox.Text)
+        '    LEDpitch = CDbl(LEDpitchTextBox.Text)
 
-            Dim count As Integer = DataGridView1.Columns.Count
-            If count = 0 Then
-                MessageBox.Show("請先輸入光學數據", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1)
-                Exit Sub
-            End If
+        '    Dim count As Integer = DataGridView1.Columns.Count
+        '    If count = 0 Then
+        '        MessageBox.Show("請先輸入光學數據", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1)
+        '        Exit Sub
+        '    End If
 
-            '計算取hotspot的位置
-            Dim Grid As Double, pitchGrid As Integer, edgeGrid As Integer
-            Grid = (BLUwidth / count)
-            pitchGrid = CInt(LEDpitch / Grid)
-            edgeGrid = CInt((BLUwidth - ((LEDnum - 1) * LEDpitch)) / Grid / 2)
+        '    '計算取hotspot的位置
+        '    Dim Grid As Double, pitchGrid As Integer, edgeGrid As Integer
+        '    Grid = (BLUwidth / count)
+        '    pitchGrid = CInt(LEDpitch / Grid)
+        '    edgeGrid = CInt((BLUwidth - ((LEDnum - 1) * LEDpitch)) / Grid / 2)
 
-            If CheckBox1.Checked = True Then '選擇亮LED在前，跳到fitline1
-                fitline1(sender, e, LEDnum, pitchGrid, edgeGrid, "lower")
-            Else '選擇亮在LED間，跳到fitline2
-                fitline2(sender, e, LEDnum, pitchGrid, edgeGrid, "lower")
-            End If
+        '    If CheckBox1.Checked = True Then '選擇亮LED在前，跳到fitline1
+        '        fitline1(sender, e, LEDnum, pitchGrid, edgeGrid, "lower")
+        '    Else '選擇亮在LED間，跳到fitline2
+        '        fitline2(sender, e, LEDnum, pitchGrid, edgeGrid, "lower")
+        '    End If
 
-            Dim button As Button = FittingButton3
-            changecolor(button, 3) '點選後變更按鈕的顏色
-        Catch ex As Exception
-            MessageBox.Show(ex.Message, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1)
-        End Try
+        '    Dim button As Button = FittingButton3
+        '    changecolor(button, 3) '點選後變更按鈕的顏色
+        'Catch ex As Exception
+        '    MessageBox.Show(ex.Message, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1)
+        'End Try
     End Sub
 
     Private Sub TrackBar1_Scroll(sender As Object, e As EventArgs) Handles TrackBar1.Scroll
@@ -255,215 +270,195 @@ Public Class HotspotFitting
     End Sub
 
     Private Sub fitline1(sender As Object, e As EventArgs, ByVal count As Integer, ByVal pitchGrid As Integer, ByVal edgeGrid As Integer, ByVal category As String)
-        Try
-            Chart1.Series.Clear()
-            DataGridView1_MouseUp(sender, e)
+        'Try
+        '    Chart1.Series.Clear()
+        '    DataGridView1_MouseUp(sender, e)
 
-            Dim series2 As Series = New Series("Fitting", 1000)
-            series2.ChartType = SeriesChartType.Spline
-            series2.BorderWidth = 2
-            series2.Color = Color.LightSeaGreen
+        '    Dim series2 As Series = New Series("Fitting", 1000)
+        '    series2.ChartType = SeriesChartType.Spline
+        '    series2.BorderWidth = 2
+        '    series2.Color = Color.LightSeaGreen
 
-            Dim info As Integer
-            Dim s As spline1dinterpolant = New XAlglib.spline1dinterpolant()
-            Dim rep As spline1dfitreport = New XAlglib.spline1dfitreport()
-            Dim rho As Double
+        '    Dim info As Integer
+        '    Dim s As spline1dinterpolant = New XAlglib.spline1dinterpolant()
+        '    Dim rep As spline1dfitreport = New XAlglib.spline1dfitreport()
+        '    Dim rho As Double
 
-            rho = TrackBar1.Value
+        '    rho = TrackBar1.Value
 
-            Dim row As Integer = DataGridView1.SelectedRows(0).Index
-            Dim stage As Integer = 1
+        '    Dim row As Integer = DataGridView1.SelectedRows(0).Index
+        '    Dim stage As Integer = 1
 
-            Dim x(count + 3) As Double, y(count + 3) As Double
+        '    Dim x(count + 3) As Double, y(count + 3) As Double
 
-            x(0) = CDbl(0)
-            y(0) = CDbl(DataGridView1.Rows(row).Cells(0).Value)
+        '    x(0) = CDbl(0)
+        '    y(0) = CDbl(DataGridView1.Rows(row).Cells(0).Value)
 
-            For i = 1 To count + 3
-                Select Case i
-                    Case 1
-                        x(i) = CDbl(i)
-                        y(i) = CDbl(DataGridView1.Rows(row).Cells(i - 1).Value)
-                    Case 2
-                        x(i) = CDbl(i)
-                        y(i) = CDbl(DataGridView1.Rows(row).Cells(i - 1).Value)
-                        stage = stage + edgeGrid - 1
-                    Case count + 2
-                        x(count + 2) = CDbl(DataGridView1.Columns.Count - 1)
-                        y(count + 2) = CDbl(DataGridView1.Rows(row).Cells(DataGridView1.Columns.Count - 2).Value)
-                    Case count + 3
-                        x(count + 3) = CDbl(DataGridView1.Columns.Count)
-                        y(count + 3) = CDbl(DataGridView1.Rows(row).Cells(DataGridView1.Columns.Count - 1).Value)
-                    Case Else
-                        Dim max As Double = 0
-                        Dim min As Double = 100
-                        Dim pos As Integer = 0
+        '    For i = 1 To count + 3
+        '        Select Case i
+        '            Case 1
+        '                x(i) = CDbl(i)
+        '                y(i) = CDbl(DataGridView1.Rows(row).Cells(i - 1).Value)
+        '            Case 2
+        '                x(i) = CDbl(i)
+        '                y(i) = CDbl(DataGridView1.Rows(row).Cells(i - 1).Value)
+        '                stage = stage + edgeGrid - 1
+        '            Case count + 2
+        '                x(count + 2) = CDbl(DataGridView1.Columns.Count - 1)
+        '                y(count + 2) = CDbl(DataGridView1.Rows(row).Cells(DataGridView1.Columns.Count - 2).Value)
+        '            Case count + 3
+        '                x(count + 3) = CDbl(DataGridView1.Columns.Count)
+        '                y(count + 3) = CDbl(DataGridView1.Rows(row).Cells(DataGridView1.Columns.Count - 1).Value)
+        '            Case Else
+        '                Dim max As Double = 0
+        '                Dim min As Double = 100
+        '                Dim pos As Integer = 0
 
-                        For m = stage - 2 To stage + 2
-                            If max < CDbl(DataGridView1.Rows(row).Cells(m).Value) Then
-                                max = CDbl(DataGridView1.Rows(row).Cells(m).Value)
-                                pos = m
-                            End If
+        '                For m = stage - 2 To stage + 2
+        '                    If max < CDbl(DataGridView1.Rows(row).Cells(m).Value) Then
+        '                        max = CDbl(DataGridView1.Rows(row).Cells(m).Value)
+        '                        pos = m
+        '                    End If
 
-                            If min > CDbl(DataGridView1.Rows(row).Cells(m).Value) Then
-                                min = CDbl(DataGridView1.Rows(row).Cells(m).Value)
-                                pos = m
-                            End If
-                        Next m
+        '                    If min > CDbl(DataGridView1.Rows(row).Cells(m).Value) Then
+        '                        min = CDbl(DataGridView1.Rows(row).Cells(m).Value)
+        '                        pos = m
+        '                    End If
+        '                Next m
 
-                        Select Case category
-                            Case "upper"
-                                x(i) = pos
-                                y(i) = max
-                            Case "lower"
-                                x(i) = pos
-                                y(i) = min
-                        End Select
-                        stage = stage + pitchGrid
-                End Select
-            Next
+        '                Select Case category
+        '                    Case "upper"
+        '                        x(i) = pos
+        '                        y(i) = max
+        '                    Case "lower"
+        '                        x(i) = pos
+        '                        y(i) = min
+        '                End Select
+        '                stage = stage + pitchGrid
+        '        End Select
+        '    Next
 
-            XAlglib.spline1dfitpenalized(x, y, 50, rho, info, s, rep)
+        '    XAlglib.spline1dfitpenalized(x, y, 50, rho, info, s, rep)
 
-            For j = 1 To DataGridView1.Columns.Count
-                series2.Points.AddXY(j, XAlglib.spline1dcalc(s, j))
-            Next
+        '    For j = 1 To DataGridView1.Columns.Count
+        '        series2.Points.AddXY(j, XAlglib.spline1dcalc(s, j))
+        '    Next
 
-            Chart1.Series.Add(series2)
-        Catch ex As Exception
-            MessageBox.Show(ex.Message, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1)
-        End Try
+        '    Chart1.Series.Add(series2)
+        'Catch ex As Exception
+        '    MessageBox.Show(ex.Message, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1)
+        'End Try
     End Sub
 
     Private Sub fitline2(sender As Object, e As EventArgs, ByVal count As Integer, ByVal pitchGrid As Integer, ByVal edgeGrid As Integer, ByVal category As String)
-        Try
-            Chart1.Series.Clear()
-            DataGridView1_MouseUp(sender, e)
+        'Try
+        '    Chart1.Series.Clear()
+        '    DataGridView1_MouseUp(sender, e)
 
-            Dim series2 As Series = New Series("Fitting", 1000)
-            series2.ChartType = SeriesChartType.Spline
-            series2.BorderWidth = 2
-            series2.Color = Color.LightSeaGreen
+        '    Dim series2 As Series = New Series("Fitting", 1000)
+        '    series2.ChartType = SeriesChartType.Spline
+        '    series2.BorderWidth = 2
+        '    series2.Color = Color.LightSeaGreen
 
-            Dim info As Integer
-            Dim s As spline1dinterpolant = New XAlglib.spline1dinterpolant()
-            Dim rep As spline1dfitreport = New XAlglib.spline1dfitreport()
-            Dim rho As Double
+        '    Dim info As Integer
+        '    Dim s As spline1dinterpolant = New XAlglib.spline1dinterpolant()
+        '    Dim rep As spline1dfitreport = New XAlglib.spline1dfitreport()
+        '    Dim rho As Double
 
-            rho = TrackBar1.Value
+        '    rho = TrackBar1.Value
 
-            Dim row As Integer = DataGridView1.SelectedRows(0).Index
-            Dim stage As Integer = 1
+        '    Dim row As Integer = DataGridView1.SelectedRows(0).Index
+        '    Dim stage As Integer = 1
 
-            Dim x(count + 5) As Double, y(count + 5) As Double
+        '    Dim x(count + 5) As Double, y(count + 5) As Double
 
-            x(0) = CDbl(0)
-            y(0) = CDbl(DataGridView1.Rows(row).Cells(0).Value)
+        '    x(0) = CDbl(0)
+        '    y(0) = CDbl(DataGridView1.Rows(row).Cells(0).Value)
 
-            For i = 1 To count + 5
-                Select Case i
-                    Case 1
-                        x(i) = CDbl(i)
-                        y(i) = CDbl(DataGridView1.Rows(row).Cells(i - 1).Value)
-                    Case 2
-                        x(i) = CDbl(i)
-                        y(i) = CDbl(DataGridView1.Rows(row).Cells(i - 1).Value)
-                        stage = stage + (edgeGrid / 2) - 1
-                    Case 3
-                        x(i) = CDbl(i)
-                        y(i) = CDbl(DataGridView1.Rows(row).Cells(i - 1).Value)
-                        stage = stage + edgeGrid - 1
-                    Case count + 4
-                        x(count + 4) = CDbl(DataGridView1.Columns.Count - 1)
-                        y(count + 4) = CDbl(DataGridView1.Rows(row).Cells(DataGridView1.Columns.Count - 2).Value)
-                    Case count + 5
-                        x(count + 5) = CDbl(DataGridView1.Columns.Count)
-                        y(count + 5) = CDbl(DataGridView1.Rows(row).Cells(DataGridView1.Columns.Count - 1).Value)
-                    Case Else
-                        Dim max As Double = 0
-                        Dim min As Double = 100
-                        Dim pos As Integer = 0
+        '    For i = 1 To count + 5
+        '        Select Case i
+        '            Case 1
+        '                x(i) = CDbl(i)
+        '                y(i) = CDbl(DataGridView1.Rows(row).Cells(i - 1).Value)
+        '            Case 2
+        '                x(i) = CDbl(i)
+        '                y(i) = CDbl(DataGridView1.Rows(row).Cells(i - 1).Value)
+        '                stage = stage + (edgeGrid / 2) - 1
+        '            Case 3
+        '                x(i) = CDbl(i)
+        '                y(i) = CDbl(DataGridView1.Rows(row).Cells(i - 1).Value)
+        '                stage = stage + edgeGrid - 1
+        '            Case count + 4
+        '                x(count + 4) = CDbl(DataGridView1.Columns.Count - 1)
+        '                y(count + 4) = CDbl(DataGridView1.Rows(row).Cells(DataGridView1.Columns.Count - 2).Value)
+        '            Case count + 5
+        '                x(count + 5) = CDbl(DataGridView1.Columns.Count)
+        '                y(count + 5) = CDbl(DataGridView1.Rows(row).Cells(DataGridView1.Columns.Count - 1).Value)
+        '            Case Else
+        '                Dim max As Double = 0
+        '                Dim min As Double = 100
+        '                Dim pos As Integer = 0
 
-                        For m = stage - 2 To stage + 2
-                            If max < CDbl(DataGridView1.Rows(row).Cells(m).Value) Then
-                                max = CDbl(DataGridView1.Rows(row).Cells(m).Value)
-                                pos = m
-                            End If
+        '                For m = stage - 2 To stage + 2
+        '                    If max < CDbl(DataGridView1.Rows(row).Cells(m).Value) Then
+        '                        max = CDbl(DataGridView1.Rows(row).Cells(m).Value)
+        '                        pos = m
+        '                    End If
 
-                            If min > CDbl(DataGridView1.Rows(row).Cells(m).Value) Then
-                                min = CDbl(DataGridView1.Rows(row).Cells(m).Value)
-                                pos = m
-                            End If
-                        Next m
+        '                    If min > CDbl(DataGridView1.Rows(row).Cells(m).Value) Then
+        '                        min = CDbl(DataGridView1.Rows(row).Cells(m).Value)
+        '                        pos = m
+        '                    End If
+        '                Next m
 
-                        Select Case category
-                            Case "upper"
-                                x(i) = pos
-                                y(i) = max
-                            Case "lower"
-                                x(i) = pos
-                                y(i) = min
-                        End Select
-                        stage = stage + pitchGrid
-                End Select
-            Next
+        '                Select Case category
+        '                    Case "upper"
+        '                        x(i) = pos
+        '                        y(i) = max
+        '                    Case "lower"
+        '                        x(i) = pos
+        '                        y(i) = min
+        '                End Select
+        '                stage = stage + pitchGrid
+        '        End Select
+        '    Next
 
-            XAlglib.spline1dfitpenalized(x, y, 50, rho, info, s, rep)
+        '    XAlglib.spline1dfitpenalized(x, y, 50, rho, info, s, rep)
 
-            For j = 1 To DataGridView1.Columns.Count
-                series2.Points.AddXY(j, XAlglib.spline1dcalc(s, j))
-            Next
+        '    For j = 1 To DataGridView1.Columns.Count
+        '        series2.Points.AddXY(j, XAlglib.spline1dcalc(s, j))
+        '    Next
 
-            Chart1.Series.Add(series2)
-        Catch ex As Exception
-            MessageBox.Show(ex.Message, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1)
-        End Try
+        '    Chart1.Series.Add(series2)
+        'Catch ex As Exception
+        '    MessageBox.Show(ex.Message, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1)
+        'End Try
     End Sub
 
-    Private Sub fitmiddle(sender As Object, e As EventArgs)
+    Private Sub fitmiddle(ByVal row As Integer)
         Try
-            Chart1.Series.Clear()
-            DataGridView1_MouseUp(sender, e)
-
-            Dim series2 As Series = New Series("Fitting", 1000)
-            series2.ChartType = SeriesChartType.Spline
-            series2.BorderWidth = 2
-            series2.Color = Color.LightSeaGreen
-
             Dim x(DataGridView1.Columns.Count) As Double, y(DataGridView1.Columns.Count) As Double
             Dim info As Integer
             Dim s As spline1dinterpolant = New XAlglib.spline1dinterpolant()
             Dim rep As spline1dfitreport = New XAlglib.spline1dfitreport()
-            Dim rho As Double
-
-            rho = TrackBar1.Value
-
-            Dim row As Integer = DataGridView1.SelectedRows(0).Index
-            Dim Newrow As DataRow = dt1.NewRow
+            Dim rho As Double = TrackBar1.Value
 
             x(0) = CDbl(0)
             y(0) = CDbl(DataGridView1.Rows(row).Cells(0).Value)
 
-            For j = 0 To DataGridView1.Rows.Count - 1
-                For i = 1 To DataGridView1.Columns.Count
-
-                    x(i) = CDbl(i)
-                    y(i) = CDbl(DataGridView1.Rows(row).Cells(i - 1).Value)
-
-                    XAlglib.spline1dfitpenalized(x, y, 50, rho, info, s, rep)
-                Next
-
-                If j = row Then
-                    For m = 1 To DataGridView1.Columns.Count
-                        series2.Points.AddXY(m, XAlglib.spline1dcalc(s, m))
-                        Newrow(m) = CDbl(XAlglib.spline1dcalc(s, m))
-                    Next
-
-                    Chart1.Series.Add(series2)
-                End If
-                ' dt1.Rows.Add(Newrow) '新增一行資料
+            For i = 1 To DataGridView1.Columns.Count - 1
+                x(i) = CDbl(i)
+                y(i) = CDbl(DataGridView1.Rows(row).Cells(i).Value)
             Next
 
+            XAlglib.spline1dfitpenalized(x, y, 50, rho, info, s, rep)
+            Dim Newrow As DataRow = dt1.NewRow
+
+            For j = 0 To DataGridView1.Columns.Count - 1
+                Newrow(j) = CDbl(XAlglib.spline1dcalc(s, j))
+            Next
+
+            dt1.Rows.Add(Newrow)
 
         Catch ex As Exception
             MessageBox.Show(ex.Message, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1)
@@ -484,33 +479,7 @@ Public Class HotspotFitting
         Return _dirname
     End Function
 
-    Private Sub CheckBox1_Click(sender As Object, e As EventArgs) Handles CheckBox1.Click
-        CheckBox2.Checked = False
-    End Sub
-
-    Private Sub CheckBox2_Click(sender As Object, e As EventArgs) Handles CheckBox2.Click
-        CheckBox1.Checked = False
-    End Sub
-
-    Private Sub OutputButton_Click(sender As Object, e As EventArgs) Handles OutputButton.Click
-        Dim SaveFileDialog As SaveFileDialog = New SaveFileDialog
-        SaveFileDialog.InitialDirectory = "c:\" '設定開啟檔案格式
-        SaveFileDialog.Filter = "TXT Files (*.txt)|*.txt"
-        SaveFileDialog.RestoreDirectory = True
-        SaveFileDialog.FilterIndex = 2
-
-        Dim sw As StreamWriter = New StreamWriter(SaveFileDialog.FileName, False, System.Text.Encoding.Default)
-
-        For j = 0 To dt1.Rows.Count - 1
-            For i = 0 To dt1.Columns.Count - 1
-                sw.WriteLine(dt1.Rows(i)(j) & ",")
-            Next
-            sw.WriteLine(vbCrLf)
-        Next
-
-    End Sub
-
-    Private Sub changecolor(ByVal button As Button, ByVal num As Integer)
+    Public Sub changecolor(ByVal button As Button, ByVal num As Integer)
         Select Case num
             Case 1
                 FittingButton2.BackColor = SystemColors.Control
@@ -533,6 +502,46 @@ Public Class HotspotFitting
         button.ForeColor = Color.White
         controlLabel.Text = num
         OutputButton.Enabled = True
+    End Sub
+
+    Private Sub CheckBox1_Click(sender As Object, e As EventArgs) Handles CheckBox1.Click
+        CheckBox2.Checked = False
+    End Sub
+
+    Private Sub CheckBox2_Click(sender As Object, e As EventArgs) Handles CheckBox2.Click
+        CheckBox1.Checked = False
+    End Sub
+
+    Private Sub OutputButton_Click(sender As Object, e As EventArgs) Handles OutputButton.Click
+        Dim SaveFileDialog As SaveFileDialog = New SaveFileDialog
+        SaveFileDialog.InitialDirectory = "" & getInitialDirectory() & "" '設定開啟檔案格式
+        SaveFileDialog.Filter = "TXT Files (*.txt)|*.txt"
+        SaveFileDialog.RestoreDirectory = True
+        SaveFileDialog.FilterIndex = 2
+
+        If SaveFileDialog.ShowDialog(Me) = Windows.Forms.DialogResult.OK Then
+            Dim sw As StreamWriter = New StreamWriter(SaveFileDialog.FileName, False, System.Text.Encoding.Default)
+
+            For m = 0 To DataGridView1.Rows.Count - 1
+                Select Case controlLabel.Text
+                    Case 1
+
+                    Case 2
+                        fitmiddle(m)
+
+                        For n = 0 To DataGridView1.Columns.Count - 1
+                            sw.WriteLine(dt1(0)(n) & ",")
+                        Next
+                        dt1.Clear()
+                    Case 3
+
+
+                End Select
+            Next
+            sw.Flush()
+            sw.Close()
+            sw.Dispose()
+        End If
     End Sub
 
 End Class
