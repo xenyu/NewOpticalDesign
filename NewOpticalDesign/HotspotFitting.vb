@@ -9,6 +9,7 @@ Public Class HotspotFitting
     Public UploadOpenFileDialog As OpenFileDialog = New OpenFileDialog
     Public dt As DataTable = New DataTable()
     Public dt1 As DataTable = New DataTable()
+    Public dt2 As DataTable = New DataTable()
     Private nc As New NewClass()
     
     Private Sub HotspotFitting_Load(sender As Object, e As EventArgs) Handles Me.Load
@@ -23,6 +24,16 @@ Public Class HotspotFitting
         UploadOpenFileDialog.FilterIndex = 2
 
         If UploadOpenFileDialog.ShowDialog() = Windows.Forms.DialogResult.OK Then
+            If DataGridView1.Columns.Count > 0 Then
+                dt.Clear()
+                dt1.Clear()
+                dt.Columns.Clear()
+                dt1.Columns.Clear()
+                'DataGridView1.Rows.
+                DataGridView1.Columns.Clear()
+                'Chart1.Dispose()
+            End If
+ 
             ImportdataTextBox.Text = UploadOpenFileDialog.FileName
 
             ThreadPool.QueueUserWorkItem(New WaitCallback(AddressOf goinput))
@@ -138,6 +149,7 @@ Public Class HotspotFitting
             Next
 
             Chart1.Series.Add(series1) '畫線
+            Label1.Text = row.ToString
             count = count + 1
         Next
     End Sub
@@ -145,7 +157,31 @@ Public Class HotspotFitting
     'Upper Fitting
     Private Sub FittingButton1_Click(sender As Object, e As EventArgs) Handles FittingButton1.Click
         Try
-            Check()
+            Dim count As Integer = DataGridView1.Columns.Count
+            If count = 0 Then
+                MessageBox.Show("請先輸入光學數據", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1)
+                Exit Sub
+            End If
+
+            If Label1.Text = "" Then
+                MessageBox.Show("請選取上面任一行", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1)
+                Exit Sub
+            End If
+
+            If BluwidthTextBox.Text = "" Then
+                MessageBox.Show("請填入BLUwidth", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1)
+                Exit Sub
+            End If
+
+            If LEDnumberTextBox.Text = "" Then
+                MessageBox.Show("請填入LEDnumber", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1)
+                Exit Sub
+            End If
+
+            If LEDpitchTextBox.Text = "" Then
+                MessageBox.Show("請填入LEDpitch", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1)
+                Exit Sub
+            End If
 
             '計算取hotspot的位置
             If CheckBox1.Checked = True Then '選擇亮LED在前，跳到fitline1
@@ -159,8 +195,8 @@ Public Class HotspotFitting
 
                 fitline1(DataGridView1.SelectedRows(0).Index, "upper")
 
-                For j = 0 To DataGridView1.Columns.Count - 1
-                    series2.Points.AddXY(j, dt1(0)(j))
+                For j = 1 To DataGridView1.Columns.Count
+                    series2.Points.AddXY(j, dt1(0)(j - 1))
                 Next
 
                 Chart1.Series.Add(series2)
@@ -194,6 +230,11 @@ Public Class HotspotFitting
     'middle fitting
     Private Sub FittingButton2_Click(sender As Object, e As EventArgs) Handles FittingButton2.Click
         Try
+            If Label1.Text = "" Then
+                MessageBox.Show("請選取上面任一行", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1)
+                Exit Sub
+            End If
+
             Chart1.Series.Clear()
             DataGridView1_MouseUp(sender, e)
             Dim series2 As Series = New Series("Fitting", 1000)
@@ -220,7 +261,31 @@ Public Class HotspotFitting
     'lower fitting
     Private Sub FittingButton3_Click(sender As Object, e As EventArgs) Handles FittingButton3.Click
         Try
-            Check()
+            Dim count As Integer = DataGridView1.Columns.Count
+            If count = 0 Then
+                MessageBox.Show("請先輸入光學數據", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1)
+                Exit Sub
+            End If
+
+            If Label1.Text = "" Then
+                MessageBox.Show("請選取上面任一行", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1)
+                Exit Sub
+            End If
+
+            If BluwidthTextBox.Text = "" Then
+                MessageBox.Show("請填入BLUwidth", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1)
+                Exit Sub
+            End If
+
+            If LEDnumberTextBox.Text = "" Then
+                MessageBox.Show("請填入LEDnumber", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1)
+                Exit Sub
+            End If
+
+            If LEDpitchTextBox.Text = "" Then
+                MessageBox.Show("請填入LEDpitch", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1)
+                Exit Sub
+            End If
 
             If CheckBox1.Checked = True Then '選擇亮LED在前，跳到fitline1
                 Chart1.Series.Clear()
@@ -233,8 +298,8 @@ Public Class HotspotFitting
 
                 fitline1(DataGridView1.SelectedRows(0).Index, "lower")
 
-                For j = 0 To DataGridView1.Columns.Count - 1
-                    series2.Points.AddXY(j, dt1(0)(j))
+                For j = 1 To DataGridView1.Columns.Count
+                    series2.Points.AddXY(j, dt1(0)(j - 1))
                 Next
 
                 Chart1.Series.Add(series2)
@@ -498,30 +563,17 @@ Public Class HotspotFitting
         CheckBox1.Checked = False
     End Sub
 
-    Private Sub Check()
-        If BluwidthTextBox.Text = "" Then
-            MessageBox.Show("請填入BLUwidth", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1)
-            Exit Sub
-        End If
-
-        If LEDnumberTextBox.Text = "" Then
-            MessageBox.Show("請填入LEDnumber", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1)
-            Exit Sub
-        End If
-
-        If LEDpitchTextBox.Text = "" Then
-            MessageBox.Show("請填入LEDpitch", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1)
-            Exit Sub
-        End If
-
-        Dim count As Integer = DataGridView1.Columns.Count
-        If count = 0 Then
-            MessageBox.Show("請先輸入光學數據", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1)
-            Exit Sub
-        End If
-    End Sub
-
     Private Sub OutputAddPButton_Click(sender As Object, e As EventArgs) Handles OutputAddPButton.Click
+        UploadOpenFileDialog.InitialDirectory = "" & getInitialDirectory() & ""
+        UploadOpenFileDialog.Filter = "CSV Files (*.csv)|*.csv" '只能上傳csv檔
+        UploadOpenFileDialog.Title = "請輸入密度檔"
+        UploadOpenFileDialog.RestoreDirectory = True
+        UploadOpenFileDialog.FilterIndex = 2
+
+        If UploadOpenFileDialog.ShowDialog() = Windows.Forms.DialogResult.OK Then
+            ThreadPool.QueueUserWorkItem(New WaitCallback(AddressOf AddPcalculate))
+        End If
+
         Dim SaveFileDialog As SaveFileDialog = New SaveFileDialog
         SaveFileDialog.InitialDirectory = "" & getInitialDirectory() & "" '設定開啟檔案格式
         SaveFileDialog.Filter = "CSV Files (*.csv)|*.csv"
@@ -530,30 +582,50 @@ Public Class HotspotFitting
 
         If SaveFileDialog.ShowDialog(Me) = Windows.Forms.DialogResult.OK Then
             Dim sw As StreamWriter = New StreamWriter(SaveFileDialog.FileName.Insert(SaveFileDialog.FileName.Length - 4, "+"), False, System.Text.Encoding.Default)
-           
+
             For m = 0 To DataGridView1.Rows.Count - 1
                 Select Case controlLabel.Text
                     Case 1
-
+                        If CheckBox1.Checked = True Then
+                            fitline1(m, "upper")
+                        Else
+                            fitline2(m, "upper")
+                        End If
                     Case 2
                         fitmiddle(m)
                     Case 3
-
-
+                        If CheckBox1.Checked = True Then
+                            fitline1(m, "lower")
+                        Else
+                            fitline2(m, "lower")
+                        End If
                 End Select
 
                 For n = 0 To DataGridView1.Columns.Count - 1
-                    sw.Write(Format((dt1(0)(n) / DataGridView1.Rows(m).Cells(n).Value), "#.####") & ",")
+                    'Dim value As Double = Format((dt2(m)(n) / DataGridView1.Rows(m).Cells(n).Value), "#.####")
 
-
-
-                    'Dim value As Double = Format((dt1(0)(n) / DataGridView1.Rows(m).Cells(n).Value), "#.####")
+                    sw.Write(dt2(m)(n) & vbCrLf)
+                    '        If n = DataGridView1.Columns.Count - 1 Then
+                    '            If value < 1 Then
+                    '                sw.Write(1 + (1 - value) & vbCrLf)
+                    '            Else
+                    '                sw.Write(1 & vbCrLf)
+                    '            End If
+                    '        Else
+                    '            If value < 1 Then
+                    '                sw.Write(1 + (1 - value) & ",")
+                    '            Else
+                    '                sw.Write(1 & ",")
+                    '            End If
+                    '        End If
                 Next
-                dt1.Clear()
+                dt2.Clear()
             Next
             sw.Flush()
             sw.Close()
             sw.Dispose()
+
+            MessageBox.Show("檔案已輸出")
         End If
     End Sub
 
@@ -570,16 +642,22 @@ Public Class HotspotFitting
             For m = 0 To DataGridView1.Rows.Count - 1
                 Select Case controlLabel.Text
                     Case 1
-
+                        If CheckBox1.Checked = True Then
+                            fitline1(m, "upper")
+                        Else
+                            fitline2(m, "upper")
+                        End If
                     Case 2
                         fitmiddle(m)
                     Case 3
-
+                        If CheckBox1.Checked = True Then
+                            fitline1(m, "lower")
+                        Else
+                            fitline2(m, "lower")
+                        End If
                 End Select
 
                 For n = 0 To DataGridView1.Columns.Count - 1
-                    'sw.Write(Format((dt1(0)(n) / DataGridView1.Rows(m).Cells(n).Value), "#.####") & ",")
-
                     Dim value As Double = Format((dt1(0)(n) / DataGridView1.Rows(m).Cells(n).Value), "#.####")
                     If n = DataGridView1.Columns.Count - 1 Then
                         If value < 1 Then
@@ -600,6 +678,57 @@ Public Class HotspotFitting
             sw.Flush()
             sw.Close()
             sw.Dispose()
+
+            MessageBox.Show("檔案已輸出")
         End If
+    End Sub
+
+    Private Sub AddPcalculate()
+        Try
+            dt2.Clear()
+            '如果data table裡有資料，將data table裡的欄位去除
+            If dt2.Columns.Count > 0 Then
+                For d = 0 To dt2.Columns.Count - 1
+                    dt2.Columns.RemoveAt(0)
+                Next
+            End If
+
+            '將載入的檔案分行放進query裡
+            Dim query = From line In File.ReadAllLines(UploadOpenFileDialog.FileName) _
+                                             Let record = line.Split(CChar("vbCrLf")) _
+                                             Select line
+
+            Dim dtcount As Integer = 0
+
+            For Each row In query
+                Dim nArray() As String = row.Split(CChar(","))
+                Dim count As Integer = nArray.Count
+                Dim Newrow As DataRow = dt2.NewRow
+
+                If dtcount = DataGridView1.Rows.Count Then
+                    Exit Sub
+                End If
+
+                'If count <> DataGridView1.Columns.Count Or query.Count <> DataGridView1.Rows.Count Then
+                '    MessageBox.Show("輸入密度檔的切割格數不符合", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1)
+                'End If
+
+                For i = 0 To DataGridView1.Columns.Count - 1
+                    If dtcount = 0 Then
+                        dt2.Columns.Add("" & i + 1 & "", GetType(Double)) '新增data table欄位
+                    End If
+
+                    Newrow(i) = Math.Round(CDbl(nArray(i)), 2)
+                Next
+
+                dt2.Rows.Add(Newrow) '新增一行資料
+                dtcount = dtcount + 1
+
+                Dim mi As MyInvoke = New MyInvoke(AddressOf DisplayDataGridView)
+                Invoke(mi)
+            Next
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1)
+        End Try
     End Sub
 End Class
