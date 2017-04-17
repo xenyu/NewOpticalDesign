@@ -53,12 +53,13 @@ Partial Class HotspotFitting
         Me.LEDpitchTextBox = New System.Windows.Forms.TextBox()
         Me.CheckBox1 = New System.Windows.Forms.CheckBox()
         Me.CheckBox2 = New System.Windows.Forms.CheckBox()
-        Me.OutputButton = New System.Windows.Forms.Button()
+        Me.OutputAddPButton = New System.Windows.Forms.Button()
         Me.controlLabel = New System.Windows.Forms.Label()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
         Me.GroupBox3 = New System.Windows.Forms.GroupBox()
         Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog()
+        Me.OutputMinusPButton = New System.Windows.Forms.Button()
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.Chart1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.TrackBar1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -136,9 +137,10 @@ Partial Class HotspotFitting
         Me.DataGridView1.AllowUserToAddRows = False
         Me.DataGridView1.AllowUserToDeleteRows = False
         Me.DataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
+        Me.DataGridView1.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.Disable
         DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
         DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle1.Font = New System.Drawing.Font("Cambria", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle1.Font = New System.Drawing.Font("Cambria", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText
         DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
         DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText
@@ -148,10 +150,10 @@ Partial Class HotspotFitting
         Me.DataGridView1.Location = New System.Drawing.Point(11, 97)
         Me.DataGridView1.Name = "DataGridView1"
         Me.DataGridView1.ReadOnly = True
-        Me.DataGridView1.RowHeadersWidth = 20
-        DataGridViewCellStyle2.Font = New System.Drawing.Font("Cambria", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.DataGridView1.RowHeadersWidth = 18
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Cambria", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.DataGridView1.RowsDefaultCellStyle = DataGridViewCellStyle2
-        Me.DataGridView1.RowTemplate.Height = 24
+        Me.DataGridView1.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
         Me.DataGridView1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
         Me.DataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.DataGridView1.Size = New System.Drawing.Size(923, 237)
@@ -363,16 +365,16 @@ Partial Class HotspotFitting
         Me.CheckBox2.Text = "Bright Area between the LED"
         Me.CheckBox2.UseVisualStyleBackColor = True
         '
-        'OutputButton
+        'OutputAddPButton
         '
-        Me.OutputButton.Enabled = False
-        Me.OutputButton.Font = New System.Drawing.Font("Cambria", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.OutputButton.Location = New System.Drawing.Point(859, 814)
-        Me.OutputButton.Name = "OutputButton"
-        Me.OutputButton.Size = New System.Drawing.Size(75, 27)
-        Me.OutputButton.TabIndex = 38
-        Me.OutputButton.Text = "Output"
-        Me.OutputButton.UseVisualStyleBackColor = True
+        Me.OutputAddPButton.Enabled = False
+        Me.OutputAddPButton.Font = New System.Drawing.Font("Cambria", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.OutputAddPButton.Location = New System.Drawing.Point(634, 814)
+        Me.OutputAddPButton.Name = "OutputAddPButton"
+        Me.OutputAddPButton.Size = New System.Drawing.Size(141, 27)
+        Me.OutputAddPButton.TabIndex = 38
+        Me.OutputAddPButton.Text = "Output Add Points"
+        Me.OutputAddPButton.UseVisualStyleBackColor = True
         '
         'controlLabel
         '
@@ -430,17 +432,29 @@ Partial Class HotspotFitting
         Me.GroupBox3.TabIndex = 42
         Me.GroupBox3.TabStop = False
         '
+        'OutputMinusPButton
+        '
+        Me.OutputMinusPButton.Enabled = False
+        Me.OutputMinusPButton.Font = New System.Drawing.Font("Cambria", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.OutputMinusPButton.Location = New System.Drawing.Point(784, 814)
+        Me.OutputMinusPButton.Name = "OutputMinusPButton"
+        Me.OutputMinusPButton.Size = New System.Drawing.Size(151, 27)
+        Me.OutputMinusPButton.TabIndex = 43
+        Me.OutputMinusPButton.Text = "Output Minus Points"
+        Me.OutputMinusPButton.UseVisualStyleBackColor = True
+        '
         'HotspotFitting
         '
         Me.AllowDrop = True
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 12.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(947, 846)
+        Me.Controls.Add(Me.OutputMinusPButton)
         Me.Controls.Add(Me.GroupBox3)
         Me.Controls.Add(Me.GroupBox2)
         Me.Controls.Add(Me.GroupBox1)
         Me.Controls.Add(Me.controlLabel)
-        Me.Controls.Add(Me.OutputButton)
+        Me.Controls.Add(Me.OutputAddPButton)
         Me.Controls.Add(Me.Chart1)
         Me.Controls.Add(Me.DataGridView1)
         Me.Controls.Add(Me.ImportdataTextBox)
@@ -483,17 +497,18 @@ Partial Class HotspotFitting
     Friend WithEvents zeroLabel As System.Windows.Forms.Label
     Friend WithEvents bonusLabel As System.Windows.Forms.Label
     Friend WithEvents bluLabel As System.Windows.Forms.Label
-    Friend WithEvents BluwidthTextBox As System.Windows.Forms.TextBox
-    Friend WithEvents LEDnumberTextBox As System.Windows.Forms.TextBox
     Friend WithEvents LEDnumLabel As System.Windows.Forms.Label
     Friend WithEvents LEDpitchLabel As System.Windows.Forms.Label
-    Friend WithEvents LEDpitchTextBox As System.Windows.Forms.TextBox
     Friend WithEvents CheckBox1 As System.Windows.Forms.CheckBox
     Friend WithEvents CheckBox2 As System.Windows.Forms.CheckBox
-    Friend WithEvents OutputButton As System.Windows.Forms.Button
+    Friend WithEvents OutputAddPButton As System.Windows.Forms.Button
     Friend WithEvents controlLabel As System.Windows.Forms.Label
     Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
     Friend WithEvents GroupBox2 As System.Windows.Forms.GroupBox
     Friend WithEvents GroupBox3 As System.Windows.Forms.GroupBox
     Friend WithEvents SaveFileDialog1 As System.Windows.Forms.SaveFileDialog
+    Friend WithEvents OutputMinusPButton As System.Windows.Forms.Button
+    Public WithEvents BluwidthTextBox As System.Windows.Forms.TextBox
+    Public WithEvents LEDnumberTextBox As System.Windows.Forms.TextBox
+    Public WithEvents LEDpitchTextBox As System.Windows.Forms.TextBox
 End Class
