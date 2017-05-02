@@ -4,12 +4,15 @@ Imports System.Text
 
 Public Class Form1
 
-    Private Sub ToolStripButton1_Click(sender As Object, e As EventArgs) Handles ToolStripButton1.Click
+    Private Sub HotspotToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles HotspotToolStripMenuItem.Click
+        If Label1.Text = "true" Then Exit Sub
+
         Dim ImportForm As HotspotFitting = New HotspotFitting
         ImportForm.MdiParent = Me
+        ImportForm.WindowState = FormWindowState.Maximized
         ImportForm.StartPosition = FormStartPosition.CenterScreen
         ImportForm.Show()
         Cursor = Cursors.Arrow
+        Label1.Text = "true"
     End Sub
-
 End Class

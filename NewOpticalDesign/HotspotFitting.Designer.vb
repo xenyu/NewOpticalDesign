@@ -22,9 +22,9 @@ Partial Class HotspotFitting
     '請不要使用程式碼編輯器進行修改。
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim DataGridViewCellStyle11 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle12 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim ChartArea6 As System.Windows.Forms.DataVisualization.Charting.ChartArea = New System.Windows.Forms.DataVisualization.Charting.ChartArea()
+        Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim ChartArea5 As System.Windows.Forms.DataVisualization.Charting.ChartArea = New System.Windows.Forms.DataVisualization.Charting.ChartArea()
         Me.ImportLabel = New System.Windows.Forms.Label()
         Me.ImportButton = New System.Windows.Forms.Button()
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
@@ -138,21 +138,21 @@ Partial Class HotspotFitting
         Me.DataGridView1.AllowUserToDeleteRows = False
         Me.DataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
         Me.DataGridView1.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.Disable
-        DataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle11.Font = New System.Drawing.Font("Cambria", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridView1.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle11
+        DataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle9.Font = New System.Drawing.Font("Cambria", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridView1.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle9
         Me.DataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.DataGridView1.Location = New System.Drawing.Point(11, 97)
         Me.DataGridView1.Name = "DataGridView1"
         Me.DataGridView1.ReadOnly = True
         Me.DataGridView1.RowHeadersWidth = 18
-        DataGridViewCellStyle12.Font = New System.Drawing.Font("Cambria", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.DataGridView1.RowsDefaultCellStyle = DataGridViewCellStyle12
+        DataGridViewCellStyle10.Font = New System.Drawing.Font("Cambria", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.DataGridView1.RowsDefaultCellStyle = DataGridViewCellStyle10
         Me.DataGridView1.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
         Me.DataGridView1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
         Me.DataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
@@ -171,12 +171,12 @@ Partial Class HotspotFitting
         '
         'Chart1
         '
-        ChartArea6.AxisY.Interval = 10.0R
-        ChartArea6.AxisY.Maximum = 110.0R
-        ChartArea6.AxisY.Minimum = 55.0R
-        ChartArea6.Name = "ChartArea1"
-        Me.Chart1.ChartAreas.Add(ChartArea6)
-        Me.Chart1.Location = New System.Drawing.Point(11, 449)
+        ChartArea5.AxisY.Interval = 10.0R
+        ChartArea5.AxisY.Maximum = 110.0R
+        ChartArea5.AxisY.Minimum = 55.0R
+        ChartArea5.Name = "ChartArea1"
+        Me.Chart1.ChartAreas.Add(ChartArea5)
+        Me.Chart1.Location = New System.Drawing.Point(11, 440)
         Me.Chart1.Name = "Chart1"
         Me.Chart1.Size = New System.Drawing.Size(923, 359)
         Me.Chart1.TabIndex = 17
@@ -224,7 +224,7 @@ Partial Class HotspotFitting
         'TrackBar1
         '
         Me.TrackBar1.LargeChange = 1
-        Me.TrackBar1.Location = New System.Drawing.Point(155, 54)
+        Me.TrackBar1.Location = New System.Drawing.Point(155, 49)
         Me.TrackBar1.Name = "TrackBar1"
         Me.TrackBar1.Size = New System.Drawing.Size(274, 42)
         Me.TrackBar1.TabIndex = 22
@@ -233,7 +233,7 @@ Partial Class HotspotFitting
         '
         Me.SmoothLabel.AutoSize = True
         Me.SmoothLabel.Font = New System.Drawing.Font("Cambria", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.SmoothLabel.Location = New System.Drawing.Point(10, 64)
+        Me.SmoothLabel.Location = New System.Drawing.Point(10, 59)
         Me.SmoothLabel.Name = "SmoothLabel"
         Me.SmoothLabel.Size = New System.Drawing.Size(112, 17)
         Me.SmoothLabel.TabIndex = 24
@@ -243,7 +243,7 @@ Partial Class HotspotFitting
         '
         Me.TrackbarValueTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.TrackbarValueTextBox.Font = New System.Drawing.Font("Cambria", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TrackbarValueTextBox.Location = New System.Drawing.Point(124, 62)
+        Me.TrackbarValueTextBox.Location = New System.Drawing.Point(124, 57)
         Me.TrackbarValueTextBox.Name = "TrackbarValueTextBox"
         Me.TrackbarValueTextBox.Size = New System.Drawing.Size(25, 25)
         Me.TrackbarValueTextBox.TabIndex = 25
@@ -254,7 +254,7 @@ Partial Class HotspotFitting
         '
         Me.zeroLabel.AutoSize = True
         Me.zeroLabel.Font = New System.Drawing.Font("Cambria", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.zeroLabel.Location = New System.Drawing.Point(162, 86)
+        Me.zeroLabel.Location = New System.Drawing.Point(162, 78)
         Me.zeroLabel.Name = "zeroLabel"
         Me.zeroLabel.Size = New System.Drawing.Size(14, 15)
         Me.zeroLabel.TabIndex = 27
@@ -264,7 +264,7 @@ Partial Class HotspotFitting
         '
         Me.bonusLabel.AutoSize = True
         Me.bonusLabel.Font = New System.Drawing.Font("Cambria", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bonusLabel.Location = New System.Drawing.Point(405, 85)
+        Me.bonusLabel.Location = New System.Drawing.Point(405, 79)
         Me.bonusLabel.Name = "bonusLabel"
         Me.bonusLabel.Size = New System.Drawing.Size(21, 15)
         Me.bonusLabel.TabIndex = 28
@@ -358,7 +358,7 @@ Partial Class HotspotFitting
         '
         Me.OutputAddPButton.Enabled = False
         Me.OutputAddPButton.Font = New System.Drawing.Font("Cambria", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.OutputAddPButton.Location = New System.Drawing.Point(634, 814)
+        Me.OutputAddPButton.Location = New System.Drawing.Point(634, 808)
         Me.OutputAddPButton.Name = "OutputAddPButton"
         Me.OutputAddPButton.Size = New System.Drawing.Size(141, 27)
         Me.OutputAddPButton.TabIndex = 38
@@ -368,7 +368,7 @@ Partial Class HotspotFitting
         'controlLabel
         '
         Me.controlLabel.AutoSize = True
-        Me.controlLabel.Location = New System.Drawing.Point(15, 817)
+        Me.controlLabel.Location = New System.Drawing.Point(15, 809)
         Me.controlLabel.Name = "controlLabel"
         Me.controlLabel.Size = New System.Drawing.Size(37, 12)
         Me.controlLabel.TabIndex = 39
@@ -400,7 +400,7 @@ Partial Class HotspotFitting
         Me.GroupBox2.Controls.Add(Me.TrackBar1)
         Me.GroupBox2.Location = New System.Drawing.Point(11, 335)
         Me.GroupBox2.Name = "GroupBox2"
-        Me.GroupBox2.Size = New System.Drawing.Size(456, 106)
+        Me.GroupBox2.Size = New System.Drawing.Size(456, 96)
         Me.GroupBox2.TabIndex = 41
         Me.GroupBox2.TabStop = False
         '
@@ -416,7 +416,7 @@ Partial Class HotspotFitting
         Me.GroupBox3.Controls.Add(Me.CheckBox1)
         Me.GroupBox3.Location = New System.Drawing.Point(482, 335)
         Me.GroupBox3.Name = "GroupBox3"
-        Me.GroupBox3.Size = New System.Drawing.Size(453, 106)
+        Me.GroupBox3.Size = New System.Drawing.Size(453, 96)
         Me.GroupBox3.TabIndex = 42
         Me.GroupBox3.TabStop = False
         '
@@ -424,7 +424,7 @@ Partial Class HotspotFitting
         '
         Me.OutputMinusPButton.Enabled = False
         Me.OutputMinusPButton.Font = New System.Drawing.Font("Cambria", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.OutputMinusPButton.Location = New System.Drawing.Point(784, 814)
+        Me.OutputMinusPButton.Location = New System.Drawing.Point(784, 808)
         Me.OutputMinusPButton.Name = "OutputMinusPButton"
         Me.OutputMinusPButton.Size = New System.Drawing.Size(151, 27)
         Me.OutputMinusPButton.TabIndex = 43
@@ -434,7 +434,7 @@ Partial Class HotspotFitting
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(73, 817)
+        Me.Label1.Location = New System.Drawing.Point(73, 810)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(0, 12)
         Me.Label1.TabIndex = 44
@@ -460,6 +460,8 @@ Partial Class HotspotFitting
         Me.Controls.Add(Me.ImportLabel)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.Name = "HotspotFitting"
+        Me.ShowIcon = False
+        Me.ShowInTaskbar = False
         Me.Text = "Hotspot Fitting"
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.Chart1, System.ComponentModel.ISupportInitialize).EndInit()

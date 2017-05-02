@@ -6,7 +6,7 @@
     Public Property GetPitchGrid(ByVal BLUwidth As Double, ByVal LEDpitch As Double, ByVal count As Integer) As Integer
         Get
             Grid = CDbl(BLUwidth / count)
-            PitchGrid = CInt(LEDpitch / Grid)
+            PitchGrid = Math.Floor(LEDpitch / Grid)
 
             Return PitchGrid
         End Get
@@ -18,7 +18,7 @@
     Public Property GetEdgeGrid(ByVal BLUwidth As Double, ByVal LEDpitch As Double, ByVal LEDnum As Integer, ByVal count As Integer) As Integer
         Get
             Grid = CDbl(BLUwidth / count)
-            EdgeGrid = CInt((BLUwidth - ((LEDnum - 1) * LEDpitch)) / Grid / 2)
+            EdgeGrid = Math.Floor((BLUwidth - ((LEDnum - 1) * LEDpitch)) / Grid / 2)
 
             Return EdgeGrid
         End Get
