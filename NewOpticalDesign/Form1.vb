@@ -15,4 +15,8 @@ Public Class Form1
         Cursor = Cursors.Arrow
         Label1.Text = "true"
     End Sub
+
+    Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+    End Sub
 End Class

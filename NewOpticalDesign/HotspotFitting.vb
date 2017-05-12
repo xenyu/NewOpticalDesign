@@ -113,10 +113,10 @@ Public Class HotspotFitting
         DataGridView1.RowHeadersWidth = 40
         DataGridView1.RowHeadersDefaultCellStyle.Font = New Font("Cambria", 9)
 
+        'DatagridView左側加入行數
         For m = 0 To CInt(rowTextBox.Text) - 1
             DataGridView1.Rows(m).HeaderCell.Value = "" & m + 1 & ""
         Next
-
 
         For Each col In DataGridView1.Columns
             col.sortmode = DataGridViewColumnSortMode.NotSortable
